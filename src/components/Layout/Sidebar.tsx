@@ -32,7 +32,6 @@ export default function Sidebar({ collapsed = false, onToggle, onClose }: Sideba
     { to: '/admin', icon: Map, label: t('nav_admin_map'), end: true },
     { to: '/admin/dashboard', icon: BarChart3, label: t('nav_admin_dashboard') },
     { to: '/admin/postos', icon: Zap, label: t('nav_admin_stations') },
-    { to: '/admin/novo', icon: PlusCircle, label: t('nav_admin_new') },
     { to: '/admin/cobertura', icon: Layers, label: t('nav_admin_coverage') },
     { to: '/admin/planeamento', icon: AlertTriangle, label: t('nav_admin_planning') },
     { to: '/admin/utilizadores', icon: Users, label: t('nav_admin_users') },
