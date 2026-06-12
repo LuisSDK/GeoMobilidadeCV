@@ -62,7 +62,7 @@ function MapAdmin({ postos, onSelect, selectedId, onRefresh }: {
           coverageRadius={coverageRadius}
         />
         {/* Controls overlay */}
-        <div className="absolute top-4 left-4 z-[1000] flex flex-col gap-2">
+        <div className="absolute top-4 right-4 z-[1000] flex flex-col gap-2">
           <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-elevated border border-slate-200 p-3 space-y-2">
             <div className="text-xs font-semibold text-slate-600 uppercase tracking-wider">Cobertura</div>
             <label className="flex items-center gap-2 cursor-pointer">
@@ -142,7 +142,7 @@ function MapAdmin({ postos, onSelect, selectedId, onRefresh }: {
 }
 
 // ── Gestão de Postos ────────────────────────────────────────────
-function GestaoPostos({ postos, loading, onRefresh }: { postos: Posto[]; loading: boolean; onRefresh: () => void }) {
+function GestaoPostos({ postos, loading, onRefresh, onNewClick }: { postos: Posto[]; loading: boolean; onRefresh: () => void; onNewClick?: () => void }) {
   const [editing, setEditing] = useState<Posto | null>(null);
   const [showForm, setShowForm] = useState(false);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -157,23 +157,23 @@ function GestaoPostos({ postos, loading, onRefresh }: { postos: Posto[]; loading
         />
       )}
       {!showForm && !editing && (
-        <StationList
-          postos={postos}
-          onEdit={p => setEditing(p)}
-          onRefresh={onRefresh}
-          selectedId={selectedId}
-          onSelect={p => setSelectedId(p.id)}
-        />
+        <>
+          <div className="flex justify-between items-center">
+            <h3 className="text-lg font-semibold text-slate-800 dark:text-white">Postos Registados</h3>
+            <button onClick={() => setShowForm(true)}
+              className="flex items-center gap-1.5 text-xs bg-cv-blue text-white rounded-lg px-3 py-1.5 hover:bg-blue-800 transition-colors">
+              <PlusCircle size={13}/>Novo Posto
+            </button>
+          </div>
+          <StationList
+            postos={postos}
+            onEdit={p => setEditing(p)}
+            onRefresh={onRefresh}
+            selectedId={selectedId}
+            onSelect={p => setSelectedId(p.id)}
+          />
+        </>
       )}
-    </div>
-  );
-}
-
-// ── Novo Posto ──────────────────────────────────────────────────
-function NovoPostoPage({ onSaved }: { onSaved: () => void }) {
-  return (
-    <div className="p-6 max-w-2xl mx-auto">
-      <StationForm posto={null} onSaved={onSaved} onCancel={() => window.history.back()} />
     </div>
   );
 }
@@ -230,20 +230,8 @@ export default function AdminDashboard() {
           <AppShell
             title="Gestão de Postos"
             subtitle={`${postos.length} postos no inventário nacional`}
-            actions={
-              <button onClick={() => window.location.href='/admin/novo'}
-                className="flex items-center gap-1.5 text-xs bg-cv-blue text-white rounded-lg px-3 py-1.5 hover:bg-blue-800 transition-colors">
-                <PlusCircle size={13}/>Novo Posto
-              </button>
-            }
           >
             <GestaoPostos postos={postos} loading={loading} onRefresh={reload} />
-          </AppShell>
-        } />
-
-        <Route path="/novo" element={
-          <AppShell title="Novo Posto" subtitle="Registar novo ponto de carregamento">
-            <NovoPostoPage onSaved={() => { reload(); window.history.back(); }} />
           </AppShell>
         } />
 
