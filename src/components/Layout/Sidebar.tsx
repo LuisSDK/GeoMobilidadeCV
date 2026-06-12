@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { useI18n } from '../../contexts/I18nContext';
 import {
@@ -41,9 +42,16 @@ export default function Sidebar({ collapsed = false, onToggle, onClose }: Sideba
 
   const nav = isAdmin ? ADMIN_NAV : USER_NAV;
 
+  const [loggingOut, setLoggingOut] = useState(false);
+
   async function handleLogout() {
-    await signOut();
-    navigate('/login');
+    try {
+      setLoggingOut(true);
+      await signOut();
+      navigate('/login');
+    } finally {
+      setLoggingOut(false);
+    }
   }
 
   return (
@@ -113,10 +121,21 @@ export default function Sidebar({ collapsed = false, onToggle, onClose }: Sideba
         <button
           onClick={handleLogout}
           title={collapsed ? t('nav_logout') : undefined}
-          className={`flex items-center ${collapsed ? 'justify-center px-2' : 'gap-3 px-4'} py-2.5 rounded-lg text-sm font-medium text-blue-200 hover:bg-red-500/20 hover:text-red-300 transition-all w-full`}
+          disabled={loggingOut}
+          aria-busy={loggingOut}
+          className={`flex items-center ${collapsed ? 'justify-center px-2' : 'gap-3 px-4'} py-2.5 rounded-lg text-sm font-medium text-blue-200 ${loggingOut ? 'opacity-60 cursor-wait' : 'hover:bg-red-500/20 hover:text-red-300'} transition-all w-full`}
         >
-          <LogOut size={15} className="flex-shrink-0" />
-          {!collapsed && <span>{t('nav_logout')}</span>}
+          {loggingOut ? (
+            <>
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              {!collapsed && <span>A sair...</span>}
+            </>
+          ) : (
+            <>
+              <LogOut size={15} className="flex-shrink-0" />
+              {!collapsed && <span>{t('nav_logout')}</span>}
+            </>
+          )}
         </button>
       </div>
     </aside>
