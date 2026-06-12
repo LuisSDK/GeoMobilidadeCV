@@ -156,9 +156,9 @@ interface ChatbotProps {
 
 let msgCounter = 0;
 
-export default function ChatbotWidget({ postos: externalPostos, isAdmin = false, availability: externalAvailability = {}, onMapCommand }: ChatbotProps) {
+export default function ChatbotWidget({ postos: externalPostos, isAdmin = false, availability: externalAvailability, onMapCommand }: ChatbotProps) {
   const [postos, setPostos] = useState<Posto[]>(externalPostos || []);
-  const [availability, setAvailability] = useState<Record<string, PostoAvailability>>(externalAvailability);
+  const [availability, setAvailability] = useState<Record<string, PostoAvailability>>(externalAvailability || {});
   const [loaded, setLoaded] = useState(!!externalPostos?.length);
 
   // Fetch postos internally if not provided
@@ -178,7 +178,7 @@ export default function ChatbotWidget({ postos: externalPostos, isAdmin = false,
 
   // Generate mock availability if not provided
   useEffect(() => {
-    if (postos.length > 0 && Object.keys(externalAvailability).length === 0) {
+    if (postos.length > 0 && (!externalAvailability || Object.keys(externalAvailability).length === 0)) {
       const mock: Record<string, PostoAvailability> = {};
       postos.forEach(p => {
         const rand = Math.random();
@@ -192,7 +192,7 @@ export default function ChatbotWidget({ postos: externalPostos, isAdmin = false,
         };
       });
       setAvailability(mock);
-    } else if (Object.keys(externalAvailability).length > 0) {
+    } else if (externalAvailability && Object.keys(externalAvailability).length > 0) {
       setAvailability(externalAvailability);
     }
   }, [postos, externalAvailability]);

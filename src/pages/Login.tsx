@@ -62,9 +62,14 @@ export default function Login() {
       }
     } else {
       setLoading(true);
-      const { error: err } = await signIn(email, password);
+      const { error: err, role } = await signIn(email, password);
       setLoading(false);
-      if (err) setError('Credenciais inválidas. Verifique o email e palavra-passe.');
+      if (err) {
+        setError('Credenciais inválidas. Verifique o email e palavra-passe.');
+      } else {
+        const targetRole = role ?? (email === 'admin@geomobilidade.cv' ? 'admin' : 'utilizador');
+        navigate(targetRole === 'admin' ? '/admin' : '/mapa', { replace: true });
+      }
     }
   }
 
@@ -103,22 +108,22 @@ export default function Login() {
         </div>
 
         <div className="relative">
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-10 h-10 bg-cv-teal rounded-xl flex items-center justify-center">
-              <Zap size={20} className="text-white" />
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-cv-teal rounded-xl flex items-center justify-center">
+              <Zap size={24} className="text-white" />
             </div>
-            <span className="text-white/90 text-sm font-bold">GeoMobilidade CV</span>
+            <h3 className="text-lg font-bold text-white leading-tight">
+              <span className="text-white/90 font-bold block">GeoMobilidade CV</span>
+              <span className="text-cv-gold block">Cabo Verde</span>
+            </h3>
           </div>
-          <h1 className="text-4xl font-bold text-white mt-8 leading-tight">
-            GeoMobilidade<br />
-            <span className="text-cv-gold">Cabo Verde</span>
-          </h1>
-          <p className="text-blue-200 mt-4 text-base leading-relaxed max-w-sm">
-            Portal WebGIS de gestão e análise da rede nacional de carregamento de veículos elétricos.
-          </p>
         </div>
 
-        <div className="relative space-y-4">
+        <p className="text-blue-200 mb-8 text-base leading-relaxed max-w-sm">
+            Portal WebGIS de gestão e análise da rede nacional de carregamento de veículos elétricos:
+        </p>
+
+        <div className="relative space-y-4 -my-8">
           {features.map(f => (
             <div key={f.label} className="flex items-center gap-3">
               <div className="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -129,7 +134,7 @@ export default function Login() {
           ))}
         </div>
 
-        <div className="relative border-t border-white/10 pt-6">
+        <div className="relative border-t border-white/10 pt-2 my-16">
           <p className="text-blue-300 text-xs">
             © 2024 GeoMobilidade Cabo Verde
           </p>
