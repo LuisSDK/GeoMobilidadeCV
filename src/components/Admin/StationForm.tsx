@@ -57,7 +57,9 @@ export default function StationForm({ posto, onSaved, onCancel }: StationFormPro
       }
       onSaved();
     } catch (e: unknown) {
-      setError(e instanceof Error ? e.message : 'Erro ao guardar');
+      //setError(e instanceof Error ? e.message : 'Erro ao guardar');
+      const message = e instanceof Error ? e.message : (typeof e === 'object' && e !== null) ? (e as any).message ?? JSON.stringify(e) : 'Erro ao guardar';
+      setError(message);
     } finally {
       setLoading(false);
     }
@@ -69,7 +71,7 @@ export default function StationForm({ posto, onSaved, onCancel }: StationFormPro
     <div className="bg-white rounded-xl shadow-modal border border-slate-200 overflow-hidden fade-in">
       <div className="flex items-center justify-between px-6 py-4 border-b border-slate-100 bg-gradient-to-r from-cv-blue to-blue-800">
         <h2 className="font-bold text-white">{posto ? 'Editar Posto' : 'Novo Posto de Carregamento'}</h2>
-        <button onClick={onCancel} className="text-white/70 hover:text-white"><X size={18}/></button>
+        <button title='cancel' onClick={onCancel} className="text-white/70 hover:text-white"><X size={18}/></button>
       </div>
 
       {error && (
@@ -112,12 +114,12 @@ export default function StationForm({ posto, onSaved, onCancel }: StationFormPro
           <div className="grid grid-cols-2 gap-3">
             <div>
               <label className="text-[10px] text-slate-500 mb-1 block">Latitude</label>
-              <input type="number" step="0.0001" value={form.latitude} onChange={e => set('latitude', e.target.value)}
+              <input type="number" step="0.0001" value={form.latitude} onChange={e => set('latitude', Number(e.target.value))}
                 className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cv-blue/30 font-mono" />
             </div>
             <div>
               <label className="text-[10px] text-slate-500 mb-1 block">Longitude</label>
-              <input type="number" step="0.0001" value={form.longitude} onChange={e => set('longitude', e.target.value)}
+              <input type="number" step="0.0001" value={form.longitude} onChange={e => set('longitude', Number(e.target.value))}
                 className="w-full border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-cv-blue/30 font-mono" />
             </div>
           </div>
