@@ -19,6 +19,7 @@ export default function Login() {
   const [setupDone, setSetupDone] = useState(false);
   const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
+  const showDemo = (import.meta as any).env?.VITE_SHOW_DEMO_ACCOUNTS === 'true';
 
   // Password validation
   function validatePassword(pw: string): string | null {
@@ -269,7 +270,7 @@ export default function Login() {
               </button>
             </form>
 
-            {mode === 'login' && (
+            {mode === 'login' && showDemo && (
               <div className="mt-6 border-t border-slate-100 pt-6">
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Contas de demonstração</p>
                 <div className="grid grid-cols-2 gap-3">
