@@ -18,6 +18,7 @@ interface SidebarProps {
 export default function Sidebar({ collapsed = false, onToggle, onClose }: SidebarProps) {
   const { perfil, user, signOut, isAdmin } = useAuth();
   const { t } = useI18n();
+  const showApiExplorer = (import.meta as any).env?.VITE_SHOW_API_EXPLORER === 'true';
   const displayName = perfil?.nome || (user?.user_metadata?.nome as string | undefined) || user?.email?.split('@')[0] || '';
   const navigate = useNavigate();
 
@@ -40,7 +41,7 @@ export default function Sidebar({ collapsed = false, onToggle, onClose }: Sideba
     { to: '/ajuda', icon: HelpCircle, label: t('nav_help') },
   ];
 
-  const nav = isAdmin ? ADMIN_NAV : USER_NAV;
+  const nav = isAdmin ? ADMIN_NAV.filter(item => showApiExplorer || item.to !== '/admin/api') : USER_NAV;
 
   const [loggingOut, setLoggingOut] = useState(false);
 

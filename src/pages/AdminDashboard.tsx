@@ -190,6 +190,7 @@ function DashboardAdmin({ postos }: { postos: Posto[] }) {
 
 // ── Main Admin Dashboard ────────────────────────────────────────
 export default function AdminDashboard() {
+  const showApiExplorer = (import.meta as any).env?.VITE_SHOW_API_EXPLORER === 'true';
   const { postos, loading, reload } = usePostos();
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -259,13 +260,15 @@ export default function AdminDashboard() {
           </AppShell>
         } />
 
-        <Route path="/api" element={
-          <AppShell title="API Explorer" subtitle="Documentação e teste da API geográfica GeoMobilidade CV">
-            <div className="p-6">
-              <ApiExplorer postos={postos} />
-            </div>
-          </AppShell>
-        } />
+        {showApiExplorer && (
+          <Route path="/api" element={
+            <AppShell title="API Explorer" subtitle="Documentação e teste da API geográfica GeoMobilidade CV">
+              <div className="p-6">
+                <ApiExplorer postos={postos} />
+              </div>
+            </AppShell>
+          } />
+        )}
       </Routes>
   );
 }
