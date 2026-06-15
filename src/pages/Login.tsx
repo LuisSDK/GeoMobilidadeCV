@@ -120,7 +120,7 @@ export default function Login() {
         </div>
 
         <p className="text-blue-200 mb-8 text-base leading-relaxed max-w-sm">
-            Portal WebGIS de gestão e análise da rede nacional de carregamento de veículos elétricos:
+            Portal WebGIS para gestão, monitorização e planeamento da rede de posto elétrico de Cabo Verde
         </p>
 
         <div className="relative space-y-4 -my-8">
@@ -136,9 +136,9 @@ export default function Login() {
 
         <div className="relative border-t border-white/10 pt-2 my-16">
           <p className="text-blue-300 text-xs">
-            © 2024 GeoMobilidade Cabo Verde
+            © 2026 GeoMobilidade Cabo Verde
           </p>
-          <p className="text-blue-400 text-xs mt-1">República de Cabo Verde</p>
+          <p className="text-blue-400 text-xs mt-1">NOSi EPE</p>
         </div>
       </div>
 
