@@ -147,7 +147,7 @@ export default function TripPlannerPage() {
       <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-200 dark:border-slate-700 shadow-card p-5">
         <h3 className="font-bold text-slate-800 dark:text-white text-sm mb-4 flex items-center gap-2">
           <Route size={15} className="text-cv-blue" />
-          Planeador de Viagem Inteligente
+          Minha Rota Intelegente
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>

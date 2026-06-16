@@ -496,7 +496,7 @@ export default function UserDashboard() {
         </AppShell>
       } />
       <Route path="/trip-planner" element={
-        <AppShell title="Planeador de Viagem" subtitle="Calcule rotas com postos de carregamento ao longo do percurso">
+        <AppShell title="Minha Rota" subtitle="Calcule rotas com postos de carregamento ao longo do percurso">
           <TripPlannerPage />
         </AppShell>
       } />
