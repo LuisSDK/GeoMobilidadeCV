@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import { supabase, type Posto } from '../lib/supabase';
 import { AppShell } from '../components/Layout/Header';
 import InteractiveMap from '../components/Map/InteractiveMap';
+import StationDetailPanel from '../components/Map/StationDetailPanel';
 import StatsCards from '../components/Dashboard/StatsCards';
 import Charts from '../components/Dashboard/Charts';
 import StationForm from '../components/Admin/StationForm';
@@ -11,6 +12,9 @@ import UserManagement from '../components/Admin/UserManagement';
 import CoverageAnalysis from '../components/Map/CoverageAnalysis';
 import PlanningMap from '../components/Map/PlanningMap';
 import ApiExplorer from '../components/API/ApiExplorer';
+import { useAvailability } from '../hooks/useAvailability';
+import { useGeolocation } from '../hooks/useGeolocation';
+import { useFavorites } from '../hooks/useFavorites';
 import { PlusCircle, RefreshCw, X, Map } from 'lucide-react';
 
 function usePostos() {
@@ -60,6 +64,7 @@ function MapAdmin({ postos, onSelect, selectedId, onRefresh }: {
           onSelect={onSelect}
           showCoverage={showCoverage}
           coverageRadius={coverageRadius}
+          openPopupOnSelect={false}
         />
         {/* Controls overlay */}
         <div className="absolute top-4 right-4 z-[1000] flex flex-col gap-2">
@@ -193,6 +198,33 @@ export default function AdminDashboard() {
   const showApiExplorer = (import.meta as any).env?.VITE_SHOW_API_EXPLORER === 'true';
   const { postos, loading, reload } = usePostos();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedPosto, setSelectedPosto] = useState<Posto | null>(null);
+  const availability = useAvailability(postos);
+  const { position: userPos } = useGeolocation();
+  const { isFavorite, toggle } = useFavorites();
+
+  function handleSelect(posto: Posto) {
+    setSelectedId(posto.id);
+    setSelectedPosto(posto);
+  }
+
+  function handleRoute(posto: Posto) {
+    const target = `${posto.latitude},${posto.longitude}`;
+    const origin = userPos ? `${userPos.lat},${userPos.lng}` : undefined;
+    const url = origin
+      ? `https://www.google.com/maps/dir/?api=1&origin=${origin}&destination=${target}`
+      : `https://www.google.com/maps/dir/?api=1&destination=${target}`;
+    window.open(url, '_blank');
+  }
+
+  // Signal chatbot when detail panel opens/closes
+  useEffect(() => {
+    if (selectedPosto) {
+      window.dispatchEvent(new CustomEvent('detail-panel-open'));
+    } else {
+      window.dispatchEvent(new CustomEvent('detail-panel-close'));
+    }
+  }, [selectedPosto]);
 
   return (
     <Routes>
@@ -206,9 +238,25 @@ export default function AdminDashboard() {
             </button>
           }
         >
-            <div className="h-full">
-              <MapAdmin postos={postos} selectedId={selectedId} onSelect={p => setSelectedId(p.id)} onRefresh={reload} />
+          <div className="h-full flex gap-4">
+            <div className="flex-1">
+              <MapAdmin postos={postos} selectedId={selectedId} onSelect={handleSelect} onRefresh={reload} />
             </div>
+            {selectedPosto && (
+              <StationDetailPanel
+                posto={selectedPosto}
+                availability={availability[selectedPosto.id]}
+                userLocation={userPos}
+                isFavorite={isFavorite(selectedPosto.id)}
+                onToggleFavorite={toggle}
+                onRoute={handleRoute}
+                onClose={() => { setSelectedPosto(null); setSelectedId(null); }}
+                postos={postos}
+                onSelectStation={handleSelect}
+                availability_map={availability}
+              />
+            )}
+          </div>
           </AppShell>
         } />
 

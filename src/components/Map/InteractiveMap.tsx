@@ -81,11 +81,13 @@ interface MapProps {
   routeCoords?: [number, number][] | null;
   availability?: Record<string, PostoAvailability>;
   isDark?: boolean;
+  openPopupOnSelect?: boolean;
 }
 
 export default function InteractiveMap({
   postos, selectedId, onSelect, showCoverage = false, coverageRadius = 10,
   center, highlightedIds, userLocation, routeCoords, availability = {}, isDark = false,
+  openPopupOnSelect = true,
 }: MapProps) {
   const mapRef = useRef<L.Map | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -171,13 +173,13 @@ export default function InteractiveMap({
 
   // Fly to selected
   useEffect(() => {
-    if (!selectedId || !mapRef.current) return;
+    if (!selectedId || !mapRef.current || !openPopupOnSelect) return;
     const posto = postos.find(p => p.id === selectedId);
     if (!posto) return;
     mapRef.current.flyTo([posto.latitude, posto.longitude], 13, { duration: 0.8 });
     const marker = markersRef.current.get(selectedId);
     if (marker) setTimeout(() => marker.openPopup(), 900);
-  }, [selectedId, postos]);
+  }, [selectedId, postos, openPopupOnSelect]);
 
   // Pan to center
   useEffect(() => {

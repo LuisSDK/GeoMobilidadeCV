@@ -137,6 +137,15 @@ function MapView() {
     }
   }
 
+  // Signal chatbot when detail panel opens/closes
+  useEffect(() => {
+    if (selectedPosto) {
+      window.dispatchEvent(new CustomEvent('detail-panel-open'));
+    } else {
+      window.dispatchEvent(new CustomEvent('detail-panel-close'));
+    }
+  }, [selectedPosto]);
+
   const nearbyUserCount = userPos
     ? findNearby(postos.filter(p => availability[p.id]?.status === 'disponivel'), userPos.lat, userPos.lng, 10).length
     : 0;
@@ -312,6 +321,7 @@ function MapView() {
           routeCoords={routeCoords}
           availability={availability}
           isDark={isDark}
+          openPopupOnSelect={false}
         />
 
         {/* Toolbar overlay */}
@@ -343,7 +353,7 @@ function MapView() {
 
         {/* Interactive Legend */}
         {!loading && (
-          <div className="absolute bottom-3 right-3 z-[1000] bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm border border-slate-200 dark:border-slate-600 rounded-xl shadow-elevated overflow-hidden">
+          <div className="absolute top-3 right-3 z-[1000] bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm border border-slate-200 dark:border-slate-600 rounded-xl shadow-elevated overflow-hidden">
             <div className="px-3 pt-2.5 pb-1 border-b border-slate-100 dark:border-slate-700">
               <span className="text-[9px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Legenda</span>
               {(filterEstado || filterTipo) && (
