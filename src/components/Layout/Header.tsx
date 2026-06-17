@@ -92,7 +92,7 @@ export default function Header({ title, subtitle, actions }: HeaderProps) {
         </div>
       )}
 
-      <header className="h-14 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 flex items-center px-5 gap-4 flex-shrink-0 transition-colors relative">
+      <header className="h-14 z-[10000] bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-700 flex items-center px-5 gap-4 flex-shrink-0 transition-colors relative">
         <button title='Menu' onClick={() => setMobileOpen(true)} className="lg:hidden text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200">
           <Menu size={20} />
         </button>
