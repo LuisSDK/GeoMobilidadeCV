@@ -6,7 +6,7 @@ import {
   Map, BarChart3, Zap, Bot, Code2, LogOut,
   Users, PlusCircle, Layers, AlertTriangle,
   ChevronRight, Star, Route, ChevronLeft, Home,
-  HelpCircle,
+  HelpCircle, ClipboardList,
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -27,6 +27,7 @@ export default function Sidebar({ collapsed = false, onToggle, onClose }: Sideba
     { to: '/mapa/postos', icon: Zap, label: t('nav_stations') },
     { to: '/mapa/trip-planner', icon: Route, label: t('nav_trip') },
     { to: '/mapa/favoritos', icon: Star, label: t('nav_favorites') },
+    { to: '/mapa/ocorrencias', icon: ClipboardList, label: 'Ocorrências' },
     { to: '/ajuda', icon: HelpCircle, label: t('nav_help') },
   ];
 
@@ -36,6 +37,7 @@ export default function Sidebar({ collapsed = false, onToggle, onClose }: Sideba
     { to: '/admin/postos', icon: Zap, label: t('nav_admin_stations') },
     { to: '/admin/cobertura', icon: Layers, label: t('nav_admin_coverage') },
     { to: '/admin/planeamento', icon: AlertTriangle, label: t('nav_admin_planning') },
+    { to: '/admin/ocorrencias', icon: ClipboardList, label: 'Ocorrências' },
     { to: '/admin/utilizadores', icon: Users, label: t('nav_admin_users') },
     { to: '/admin/api', icon: Code2, label: t('nav_admin_api') },
     { to: '/ajuda', icon: HelpCircle, label: t('nav_help') },

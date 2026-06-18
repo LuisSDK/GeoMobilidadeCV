@@ -35,3 +35,16 @@ export interface Perfil {
   organizacao: string | null;
   created_at: string;
 }
+
+export interface Ocorrencia {
+  id: string;
+  user_id: string;
+  posto_id: string | null;
+  titulo: string;
+  descricao: string;
+  tipo: 'avaria' | 'sugestao' | 'outro';
+  estado: 'pendente' | 'em_analise' | 'resolvido';
+  foto_url: string | null;
+  created_at: string;
+  updated_at: string;
+}

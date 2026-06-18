@@ -12,6 +12,7 @@ import UserManagement from '../components/Admin/UserManagement';
 import CoverageAnalysis from '../components/Map/CoverageAnalysis';
 import PlanningMap from '../components/Map/PlanningMap';
 import ApiExplorer from '../components/API/ApiExplorer';
+import OcorrenciasManagement from '../components/Admin/OcorrenciasManagement';
 import { useAvailability } from '../hooks/useAvailability';
 import { useGeolocation } from '../hooks/useGeolocation';
 import { useFavorites } from '../hooks/useFavorites';
@@ -65,6 +66,7 @@ function MapAdmin({ postos, onSelect, selectedId, onRefresh }: {
           showCoverage={showCoverage}
           coverageRadius={coverageRadius}
           openPopupOnSelect={false}
+          showResetButton
         />
         {/* Controls overlay */}
         <div className="absolute top-4 right-4 z-[1000] flex flex-col gap-2">
@@ -304,6 +306,14 @@ export default function AdminDashboard() {
           <AppShell title="Gestão de Utilizadores" subtitle="Administração de acessos ao sistema">
             <div className="p-6">
               <UserManagement />
+            </div>
+          </AppShell>
+        } />
+
+        <Route path="/ocorrencias" element={
+          <AppShell title="Gestão de Ocorrências" subtitle="Registos reportados por utilizadores">
+            <div className="p-6">
+              <OcorrenciasManagement />
             </div>
           </AppShell>
         } />

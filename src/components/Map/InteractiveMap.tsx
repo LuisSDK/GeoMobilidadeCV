@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { Posto } from '../../lib/supabase';
@@ -82,12 +82,15 @@ interface MapProps {
   availability?: Record<string, PostoAvailability>;
   isDark?: boolean;
   openPopupOnSelect?: boolean;
+  showResetButton?: boolean;
+  initialView?: { lat: number; lng: number; zoom: number };
 }
 
 export default function InteractiveMap({
   postos, selectedId, onSelect, showCoverage = false, coverageRadius = 10,
   center, highlightedIds, userLocation, routeCoords, availability = {}, isDark = false,
-  openPopupOnSelect = true,
+  openPopupOnSelect = true, showResetButton = false,
+  initialView = { lat: 16.0, lng: -24.0, zoom: 8 },
 }: MapProps) {
   const mapRef = useRef<L.Map | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -96,16 +99,35 @@ export default function InteractiveMap({
   const userMarkerRef = useRef<L.Marker | null>(null);
   const routeLayerRef = useRef<L.Polyline | null>(null);
   const tileRef = useRef<L.TileLayer | null>(null);
+  const [isZoomed, setIsZoomed] = useState(false);
 
   // Init map
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
-    const map = L.map(containerRef.current, { center: center ? [center.lat, center.lng] : [16.0, -24.0], zoom: center?.zoom ?? 8, zoomControl: true });
+    const map = L.map(containerRef.current, { center: [initialView.lat, initialView.lng], zoom: initialView.zoom, zoomControl: true });
     const tile = L.tileLayer(isDark ? TILE_DARK : TILE_LIGHT, { attribution: '© OpenStreetMap contributors', maxZoom: 19 }).addTo(map);
     tileRef.current = tile;
+
+    // Track when map moves away from initial view
+    map.on('moveend', () => {
+      const c = map.getCenter();
+      const z = map.getZoom();
+      const latDiff = Math.abs(c.lat - initialView.lat);
+      const lngDiff = Math.abs(c.lng - initialView.lng);
+      const zoomDiff = Math.abs(z - initialView.zoom);
+      setIsZoomed(latDiff > 0.5 || lngDiff > 0.5 || zoomDiff > 0);
+    });
+
     mapRef.current = map;
     return () => { map.remove(); mapRef.current = null; };
   }, []);
+
+  function resetToInitialView() {
+    const map = mapRef.current;
+    if (!map) return;
+    map.flyTo([initialView.lat, initialView.lng], initialView.zoom, { duration: 1.0 });
+    setIsZoomed(false);
+  }
 
   // Switch tiles on dark mode change
   useEffect(() => {
@@ -187,5 +209,21 @@ export default function InteractiveMap({
     mapRef.current.flyTo([center.lat, center.lng], center.zoom, { duration: 1.0 });
   }, [center]);
 
-  return <div ref={containerRef} className="w-full h-full rounded-xl" />;
+  return (
+    <div className="relative w-full h-full">
+      <div ref={containerRef} className="w-full h-full rounded-xl" />
+      {showResetButton && isZoomed && (
+        <button
+          onClick={resetToInitialView}
+          className="absolute top-20 left-[10px] z-[1000] flex items-center justify-center bg-white border-2 border-[rgba(0,0,0,0.3)] rounded-[4px] shadow-[0_1px_5px_rgba(0,0,0,0.65)] text-slate-700 w-[34px] h-[34px] hover:bg-[#f4f4f4] transition-colors leaflet-control"
+          title="Vista inicial"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
+            <polyline points="9 22 9 12 15 12 15 22"/>
+          </svg>
+        </button>
+      )}
+    </div>
+  );
 }

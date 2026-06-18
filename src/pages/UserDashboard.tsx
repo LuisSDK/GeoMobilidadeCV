@@ -7,6 +7,7 @@ import StationDetailPanel from '../components/Map/StationDetailPanel';
 import UserStats from '../components/Dashboard/UserStats';
 import FavoritesPage from './FavoritesPage';
 import TripPlannerPage from './TripPlannerPage';
+import OcorrenciasPage from './OcorrenciasPage';
 import { useGeolocation } from '../hooks/useGeolocation';
 import { useAvailability } from '../hooks/useAvailability';
 import { useFavorites } from '../hooks/useFavorites';
@@ -322,6 +323,7 @@ function MapView() {
           availability={availability}
           isDark={isDark}
           openPopupOnSelect={false}
+          showResetButton
         />
 
         {/* Toolbar overlay */}
@@ -513,6 +515,11 @@ export default function UserDashboard() {
       <Route path="/favoritos" element={
         <AppShell title="Meus Favoritos" subtitle="Postos de carregamento guardados">
           <FavoritesPage />
+        </AppShell>
+      } />
+      <Route path="/ocorrencias" element={
+        <AppShell title="Registos de Ocorrências" subtitle="Reporte problemas ou sugira melhorias na rede de carregamento">
+          <OcorrenciasPage />
         </AppShell>
       } />
       <Route path="/chatbot" element={

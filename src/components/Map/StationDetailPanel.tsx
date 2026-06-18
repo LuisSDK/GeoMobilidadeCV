@@ -79,7 +79,7 @@ export default function StationDetailPanel({
   const isHighPower = posto.potencia_kw >= 50;
 
   return (
-    <div className="flex flex-col h-full bg-white dark:bg-slate-800 w-80 shadow-modal border-l border-slate-200 dark:border-slate-700 fade-in overflow-hidden">
+    <div className="flex flex-col h-full bg-white dark:bg-slate-800 w-60 shadow-modal border-l border-slate-200 dark:border-slate-700 fade-in overflow-hidden">
       {/* Header */}
       <div className="bg-gradient-to-br from-cv-blue to-blue-700 p-4 flex-shrink-0">
         <div className="flex items-start justify-between gap-2">

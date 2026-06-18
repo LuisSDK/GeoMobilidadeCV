@@ -1,0 +1,18 @@
+{
+  "sessionId": "1781736134159",
+  "createdAt": 1781736134172,
+  "updatedAt": 1781736134176,
+  "approvedCommands": [],
+  "decisions": [],
+  "stack": {
+    "languages": [
+      "javascript",
+      "typescript"
+    ],
+    "frameworks": [
+      "react"
+    ],
+    "packageManager": "npm",
+    "detectedAt": 1781736134175
+  }
+}
